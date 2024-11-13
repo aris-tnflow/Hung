@@ -1,16 +1,17 @@
-import React from 'react';
-import { Collapse, Button, Radio, Select, Slider, Input, Space } from 'antd';
-import StylePropertyField from './StylePropertyField';
+import React from "react";
+import { Collapse, Button, Radio, Select, Slider, Input, Space } from "antd";
+import StylePropertyField from "./StylePropertyField";
 
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 export default function CustomStyleManager({ sectors }) {
-  console.log(sectors);
   return (
     <div className="gjs-custom-style-manager text-left">
       <Collapse
         accordion
         expandIconPosition="end"
-        expandIcon={({ isActive }) => isActive ? <IoIosArrowDown size={18} /> : <IoIosArrowUp size={18} />}
+        expandIcon={({ isActive }) =>
+          isActive ? <IoIosArrowDown size={18} /> : <IoIosArrowUp size={18} />
+        }
       >
         {sectors.map((sector) => (
           <Collapse.Panel
@@ -19,7 +20,6 @@ export default function CustomStyleManager({ sectors }) {
             className="bg-slate-800"
           >
             <div className={`flex flex-wrap`}>
-
               {sector.getProperties().map((prop) => (
                 <>
                   <StylePropertyField key={prop.getId()} prop={prop} />

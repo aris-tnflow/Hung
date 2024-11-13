@@ -150,7 +150,7 @@ const Login = () => {
   const handleCheckUser = async (credentialResponse) => {
     const dataUser = jwtDecode(credentialResponse?.credential);
     try {
-      toastLoading("auth", "Đang xác thực tài khoản...");
+      toastLoading("auth", "Đang Xác Thực Tài Khoản...");
       const res = await userApi.checkEmail({ email: dataUser.email });
       if (res.exists) {
         const user = await dispatch(
@@ -196,7 +196,7 @@ const Login = () => {
     formReg.resetFields();
     toastSuccess(
       "auth",
-      "Đăng ký thành công!",
+      "Đăng Ký Thành Công!",
       `Chào mừng bạn đến với ${
         info?.newData?.[0].name || "Chicken War Studio!"
       }`
@@ -488,7 +488,7 @@ const Login = () => {
                 <div className="image-layer">
                   <img
                     crossOrigin="anonymous | use-credentials"
-                    src={`${baseURL}/login/full-moon.png`}
+                    src={`/login/full-moon.png`}
                     className="form-image-main fi-2"
                   />
                 </div>
@@ -1005,6 +1005,17 @@ const Login = () => {
                   </Radio.Group>
                 </div>
               </Form.Item>
+
+              <div className="flex justify-center">
+                <ReCAPTCHA
+                  key={darkMode ? "dark" : "light"}
+                  theme={darkMode ? "dark" : "light"}
+                  sitekey="6Lf03HYqAAAAAOvGVieD87km8pMcwqnWlN5GIshO"
+                  onChange={(value) => {
+                    setCapcha(value);
+                  }}
+                />
+              </div>
             </Form>
           </Modal>
 

@@ -4,7 +4,7 @@ const Animation = (editor) => {
             const el = document.createElement('div');
             el.innerHTML = `<input type="range" class="my-input" min="${props.min}" max="${props.max}"/>`;
             const inputEl = el.querySelector('.my-input');
-            console.log(component);
+
             inputEl.addEventListener('change', event => change({ event })); // `change` will trigger the emit
             inputEl.addEventListener('input', event => change({ event, partial: true }));
             return el;

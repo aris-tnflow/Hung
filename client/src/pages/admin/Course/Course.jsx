@@ -19,7 +19,7 @@ import LayoutAdmin from "~/components/layout/Admin/Layout";
 import FileUi from "~/components/upload/FileUi";
 import Video from "~/components/video/Video";
 
-import { FaMinusCircle, FaPlusCircle } from "react-icons/fa";
+import { FaCheck, FaMinusCircle, FaPlusCircle } from "react-icons/fa";
 import { courseChildrenApi, courseModuleApi } from "~/apis/courseApi";
 
 import "./Course.css";
@@ -28,6 +28,7 @@ import { toastError, toastSuccess } from "~/components/toast";
 import { RiEditCircleFill } from "react-icons/ri";
 import { baseURL } from "~/utils";
 import FileUpload from "~/components/upload/File";
+import { FaXmark } from "react-icons/fa6";
 
 const Course = () => {
   const slug = useParams();
@@ -363,6 +364,7 @@ const Course = () => {
                       edit: info.node.edit,
                       folderChirld: parentNode?.title,
                       _id: info.node._id,
+                      public: info.node.public,
                     });
                     setCourse({
                       key,
@@ -451,6 +453,32 @@ const Course = () => {
                   >
                     Bài viết
                   </Button>
+
+                  <Button
+                    type="primary"
+                    ghost
+                    onClick={() => {
+                      courseChildrenApi
+                        .putChildren({
+                          id: slug?.slug,
+                          childId: title?.idEdit,
+                          public: title?.public ? false : true,
+                        })
+                        .then(() => {
+                          toastSuccess(
+                            "public",
+                            "Cập Nhập Trạng Thái Thành Công!",
+                            "Bài học có thể xem thử"
+                          );
+                        });
+
+                      setTitle({ ...title, public: !title?.public });
+                    }}
+                    icon={title?.public ? <FaCheck /> : <FaXmark />}
+                  >
+                    Xem Thử
+                  </Button>
+
                   <FileUpload
                     id={slug?.slug}
                     childId={title?.idEdit}

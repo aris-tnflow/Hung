@@ -1,6 +1,6 @@
 import { instance } from ".";
 
-const baseURL = "/v1/group-page";
+const baseURL = "/v2/group-page";
 
 const get = async () => {
     const response = await instance.get(`${baseURL}`)
@@ -22,9 +22,15 @@ const del = async (id) => {
     return response
 }
 
+const check = async (body) => {
+    const response = await instance.get(`${baseURL}/check/${body}`)
+    return response
+}
+
 export const groupPageApi = {
     get,
     add,
     put,
-    del
+    del,
+    check
 }

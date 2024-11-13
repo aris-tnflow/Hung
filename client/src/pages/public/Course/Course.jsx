@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Button,
   Card,
@@ -45,8 +45,12 @@ const Crouses = () => {
   const dispatch = useDispatch();
 
   const [data, setData] = useState({});
-  const [video, setVideo] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  const [openVideo, setOpenVideo] = useState(false);
+  const [video, setVideo] = useState({});
+
+  const mediaPlayerRef = useRef(null);
 
   const user = useSelector((state) => state.auth.user);
   const isPurchased = user?.courses?.some((course) => course === data._id);
@@ -74,7 +78,7 @@ const Crouses = () => {
       })
       .catch(() => {
         navigate("/courses");
-        toastError("", "Không tìm thấy khóa học!", "Vui lòng thử lại sau!");
+        toastError("", "Không Tìm Thấy Khóa Học!", "Vui lòng thử lại sau!");
       });
   }, [slug.slug]);
 
@@ -96,6 +100,22 @@ const Crouses = () => {
                 {video.title}
               </Typography.Title>
             </div>
+            {video?.public && (
+              <Button
+                type="primary"
+                ghost
+                onClick={() => {
+                  setOpenVideo(true);
+                  setVideo({
+                    src: `${baseURL}/uploads/${video.src}`,
+                    title: video.title,
+                  });
+                  mediaPlayerRef.current?.play();
+                }}
+              >
+                Xem thử
+              </Button>
+            )}
           </div>
         )),
       })),
@@ -303,8 +323,7 @@ const Crouses = () => {
                       className="!mb-2"
                       title={
                         <Typography.Title className="mb-2" level={3}>
-                          {" "}
-                          Nội Dung Khóa Học{" "}
+                          Nội Dung Khóa Học
                         </Typography.Title>
                       }
                       description={`Khóa học này bao gồm ${
@@ -315,7 +334,10 @@ const Crouses = () => {
                       )} bài học`}
                     />
 
-                    <Collapse items={courseModules} defaultActiveKey={["1"]} />
+                    <Collapse
+                      items={courseModules}
+                      defaultActiveKey={courseModules?.map((item) => item.key)}
+                    />
                   </Card>
                 </Col>
               )}
@@ -669,7 +691,7 @@ const Crouses = () => {
                             }, 0);
                             toastSuccess(
                               data.name,
-                              "Thêm vào giỏ hàng thành công",
+                              "Thêm Vào Giỏ Hàng Thành Công!",
                               `Đã thêm ${data.name} vào giỏ hàng`
                             );
                           }}
@@ -688,15 +710,20 @@ const Crouses = () => {
 
       <Modal
         centered
-        open={video}
-        onOk={() => setVideo(false)}
-        onCancel={() => setVideo(false)}
+        open={openVideo}
+        onOk={() => setOpenVideo(false)}
+        onCancel={() => {
+          setOpenVideo(false);
+          mediaPlayerRef.current?.pause();
+        }}
+        title={
+          <Typography.Link className="text-lg">{video?.title}</Typography.Link>
+        }
         width={1000}
         footer={null}
-        closeIcon={null}
         className="mb-2"
       >
-        <Video src="https://www.w3schools.com/html/mov_bbb.mp4" />
+        <Video mediaPlayerRef={mediaPlayerRef} src={video?.src} />
       </Modal>
     </Layout>
   );

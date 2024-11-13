@@ -228,24 +228,33 @@ systemctl restart nginx
 Update Backend Nginx Configuration
 
 ```bash
-nano /etc/nginx/sites-available/api.yourdomain.com.conf
+nano /etc/nginx/sites-available/api.tnflow.site.conf
 ```
 
 ```bash
 server {
     listen 80;
-    server_name api.yourdomain.com;
+    server_name api.tnflow.site;
 
-    location / {
-        proxy_pass http://localhost:4000;
+    location /v2/ {
+        proxy_pass http://localhost:8082;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
 
-        root /var/www/hung/server/7-11/src/public;
-        expires 365d;  # Cấu hình thời gian cache là 1 năm
-        add_header Cache-Control "public, max-age=31536000";  # Thêm header Cache-Control
+        # Disable caching for API responses
+        add_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0";
+        expires off;
+    }
+
+    location / {
+        root /var/www/hung/server/build/src/public;
+        try_files $uri $uri/ =404;
+
+        # Cache cho file static
+        expires 365d;
+        add_header Cache-Control "public, max-age=31536000";
         access_log off;
     }
 }

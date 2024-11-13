@@ -32,15 +32,15 @@ const HomePage = () => {
   }, [user]);
 
   const handlePutUser = (data) => {
-    toastLoading("put", "Đang cập nhật thông tin...");
+    toastLoading("put", "Đang Cập Nhật...");
     data.id = user._id;
     userApi
       .putUser(data)
       .then(() => {
-        toastSuccess("put", "Cập nhật thông tin thành công!");
+        toastSuccess("put", "Cập Nhật Thông Tin Thành Công!");
       })
       .catch(() => {
-        toastError("put", "Cập nhật thông tin thất bại!");
+        toastError("put", "Cập Nhật Thông Tin Thất Bại!");
       });
   };
 

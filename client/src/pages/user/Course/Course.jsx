@@ -67,7 +67,7 @@ const HomePage = () => {
     },
     {
       title: "GHI CHÚ BÀI HỌC",
-
+      placement: "right",
       description:
         "Trong bài học có phần ghi chú lý thuyết, mọi người nên lưu ý!",
       target: () => refs.contentRef.current,
@@ -166,7 +166,6 @@ const HomePage = () => {
           });
           updateVideoWatchStatus(video._id);
         } catch (error) {
-          console.error("Error updating video status:", error);
           toastError(
             "video",
             "Không thể cập nhật trạng thái video",
@@ -294,17 +293,15 @@ const HomePage = () => {
       const handleBeforeUnload = () => {
         const currentTime = mediaPlayerRef.current?.currentTime || 0;
         if (user?._id && currentVideo?._id) {
-          userApi
-            .putVideo({
-              id: user._id,
-              videoId: currentVideo._id,
-              img: course?.img,
-              name: course?.name,
-              title: currentVideo.title,
-              watched: true,
-              watchTime: currentTime,
-            })
-            .catch(console.error);
+          userApi.putVideo({
+            id: user._id,
+            videoId: currentVideo._id,
+            img: course?.img,
+            name: course?.name,
+            title: currentVideo.title,
+            watched: true,
+            watchTime: currentTime,
+          });
         }
       };
       handleBeforeUnload();
@@ -581,15 +578,58 @@ const HomePage = () => {
     }
   }, [user]);
 
+  // const handlePlay = (videoId, time) => {
+  //   mediaPlayerRef.current.currentTime = time;
+  //   mediaPlayerRef.current.intervalId = setInterval(() => {
+  //     userApi.putVideo({
+  //       id: user?._id,
+  //       videoId: videoId,
+  //       img: course?.img,
+  //       name: course?.name,
+  //       title: currentVideo.title,
+  //       watched: true,
+  //       watchTime: mediaPlayerRef.current.currentTime,
+  //     });
+  //   }, 2000);
+  // };
+
+  // const handlePause = () => {
+  //   if (mediaPlayerRef.current?.intervalId) {
+  //     clearInterval(mediaPlayerRef.current.intervalId);
+  //   }
+  // };
+
   const handlePlay = (videoId, time) => {
-    if (!mediaPlayerRef.current.hasPlayed) {
+    // Đảm bảo `currentTime` chỉ thiết lập một lần, hoặc theo điều kiện
+    if (mediaPlayerRef.current.paused) {
       mediaPlayerRef.current.currentTime = time;
-      mediaPlayerRef.current.hasPlayed = true;
     }
+
+    // Xóa interval cũ nếu đã tồn tại
+    if (mediaPlayerRef.current.intervalId) {
+      clearInterval(mediaPlayerRef.current.intervalId);
+    }
+
+    // Tạo một interval mới để cập nhật thông tin video
+    mediaPlayerRef.current.intervalId = setInterval(() => {
+      userApi.putVideo({
+        id: user?._id,
+        videoId: videoId,
+        img: course?.img,
+        name: course?.name,
+        title: currentVideo.title,
+        watched: true,
+        watchTime: mediaPlayerRef.current.currentTime,
+      });
+    }, 15000);
   };
 
+  // Hàm xử lý khi dừng video
   const handlePause = () => {
-    clearInterval(mediaPlayerRef.current.intervalId);
+    if (mediaPlayerRef.current.intervalId) {
+      clearInterval(mediaPlayerRef.current.intervalId);
+      mediaPlayerRef.current.intervalId = null;
+    }
   };
 
   useEffect(() => {
@@ -734,9 +774,28 @@ const HomePage = () => {
             className="!mb-6"
             loading={loading}
             title={
-              <Typography.Title level={3} className="!mb-0">
-                Nội Dung Khóa Học
-              </Typography.Title>
+              <div className="flex justify-between">
+                <Typography.Title level={3} className="!mb-0">
+                  Nội Dung Khóa Học
+                </Typography.Title>
+                <Button
+                  onClick={() => {
+                    const currentTime =
+                      mediaPlayerRef.current?.currentTime || 0;
+                    userApi.putVideo({
+                      id: user._id,
+                      videoId: currentVideo._id,
+                      img: course?.img,
+                      name: course?.name,
+                      title: currentVideo.title,
+                      watched: true,
+                      watchTime: currentTime,
+                    });
+                  }}
+                >
+                  Lưu lịch sử học tập
+                </Button>
+              </div>
             }
             ref={refs.modulesRef}
           >

@@ -151,19 +151,15 @@ const Courses = () => {
       ),
     },
     {
-      title: "Link",
+      title: "Đường dẫn",
       dataIndex: "slug",
       width: "8%",
       type: "text",
       editable: false,
-      ellipsis: {
-        showTitle: true,
-      },
       render: (slug) => (
         <>
           <Typography.Paragraph
             className="!mb-0"
-            ellipsis={{ suffix: "" }}
             copyable={{
               text: `/course/${slug}`,
             }}
@@ -224,7 +220,7 @@ const Courses = () => {
     {
       title: "Sao",
       dataIndex: "star",
-      width: "6%",
+      width: "5%",
       type: "select",
       optionSelect: [
         { label: "3", value: "3" },
@@ -612,7 +608,7 @@ const Courses = () => {
           <div className="flex flex-wrap md:flex-nowrap mt-2 gap-2 justify-center">
             <Form.Item className="mb-2" label="Ảnh bìa">
               <FileAntd
-                apiUpload={`${baseURL}/v1/courser/image`}
+                apiUpload={`${baseURL}/v2/courser/image`}
                 name="img"
                 body={formInfo?.getFieldValue("_id")}
                 fileLists={`${formInfo?.getFieldValue("img")}`}
@@ -622,7 +618,7 @@ const Courses = () => {
 
             <Form.Item className="mb-2" label="Ảnh chi tiết">
               <FileAntd
-                apiUpload={`${baseURL}/v1/courser/image`}
+                apiUpload={`${baseURL}/v2/courser/image`}
                 name="imgDetail"
                 body={formInfo.getFieldValue("_id")}
                 fileLists={`${formInfo.getFieldValue("imgDetail")}`}

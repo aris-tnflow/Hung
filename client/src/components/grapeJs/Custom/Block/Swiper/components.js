@@ -98,11 +98,7 @@ export default (editor, opts = {}) => {
         script: function (props) {
           const { progressType } = props;
           const el = this;
-
-          console.log('progressType', progressType);
-
           let swiper;
-
           function initSwiper() {
             if (swiper) {
               swiper.destroy(true, true);

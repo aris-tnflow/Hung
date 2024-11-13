@@ -1,5 +1,5 @@
 import { instance } from ".";
-const baseURL = '/v1/pages'
+const baseURL = '/v2/pages'
 
 const search = async (body) => {
     const { page = 1, limit = 10, ...searchParams } = body || {};
@@ -10,6 +10,11 @@ const search = async (body) => {
 
 const get = async (body) => {
     const response = await instance.get(`${baseURL}?page=${body?.page || 1}&limit=${body?.limit || 10}`)
+    return response
+}
+
+const getGroupPage = async (body) => {
+    const response = await instance.get(`${baseURL}/group-page/${body.slug}?page=${body?.page || 1}&limit=${body?.limit || 10}`)
     return response
 }
 
@@ -50,6 +55,7 @@ const sigEdit = async (slug) => {
 
 export const pagesApi = {
     get,
+    getGroupPage,
     add,
     del,
     sig,

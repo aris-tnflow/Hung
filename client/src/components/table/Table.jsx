@@ -252,7 +252,7 @@ const EditableTable = ({
   return (
     <Form form={form} component={false}>
       {loading ? (
-        <SkeletonTable columns={columns} data={data} isLoading={loading} />
+        <SkeletonTable columns={columns} isLoading={loading} />
       ) : (
         <DndContext
           sensors={sensors}

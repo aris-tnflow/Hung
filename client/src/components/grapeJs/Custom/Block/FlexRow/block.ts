@@ -82,10 +82,6 @@ export default (editor: Editor, opt: PluginOptions = {}) => {
     }
   });
 
-  editor.on("component:clone", (component) => {
-    console.log(component);
-  });
-
   const label = "Flexbox";
   const category = "Basic";
   const attrsRow = attrsToString(rowAttr);

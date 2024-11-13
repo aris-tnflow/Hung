@@ -12,6 +12,10 @@ const childrenSchema = new mongoose.Schema({
     _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
     title: { type: String },
     src: { type: String },
+    public: {
+        type: Boolean,
+        default: false
+    },
     content: {
         html: {
             type: String,

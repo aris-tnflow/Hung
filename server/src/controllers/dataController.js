@@ -154,7 +154,7 @@ const restore = async (req, res, next) => {
     }
 };
 
-const dataUsage = async (req, res, next) => {
+const dataMedia = async (req, res, next) => {
     try {
         const calculateDirectorySize = (directoryPath) => {
             let totalSize = 0;
@@ -165,10 +165,8 @@ const dataUsage = async (req, res, next) => {
                 const stat = fs.statSync(filePath);
 
                 if (stat.isDirectory()) {
-                    // Nếu là thư mục, gọi đệ quy để tính kích thước
                     totalSize += calculateDirectorySize(filePath);
                 } else {
-                    // Nếu là tệp, cộng kích thước của tệp vào tổng
                     totalSize += stat.size;
                 }
             });
@@ -182,6 +180,26 @@ const dataUsage = async (req, res, next) => {
         });
     } catch (err) {
         next(err);
+    }
+};
+
+const getDataUsage = async (req, res, next) => {
+    const client = new MongoClient(env.MONGODB_URI);
+    const dbName = 'test';
+    try {
+        await client.connect();
+        const db = client.db(dbName);
+        const stats = await db.command({ dbStats: 1 });
+        const totalSizeInMB = (stats.dataSize / (1024 * 1024)).toFixed(2);
+        res.status(StatusCodes.OK).json(totalSizeInMB);
+    } catch (error) {
+        console.error('Lỗi khi lấy dữ liệu sử dụng:', error);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            message: 'Không thể lấy dung lượng dữ liệu đã sử dụng',
+            error: error.message,
+        });
+    } finally {
+        await client.close();
     }
 };
 
@@ -201,5 +219,6 @@ cron.schedule(time, async () => {
 export const dataController = {
     backup,
     restore,
-    dataUsage
+    dataMedia,
+    getDataUsage
 };

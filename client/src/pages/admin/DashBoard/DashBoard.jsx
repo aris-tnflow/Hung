@@ -82,23 +82,6 @@ const DashBoard = () => {
               <Typography.Title level={4} type="danger" className="!my-2">
                 {FormatPrice(revenue?.weeklyRes)}
               </Typography.Title>
-
-              <div className="flex items-center gap-2">
-                <Typography.Text
-                  className="flex items-center gap-2 !mt-0"
-                  type="success"
-                >
-                  {revenue?.revenue?.revenueDifference > 0 ? (
-                    <>
-                      {" "}
-                      + {FormatPrice(revenue?.revenue?.revenueDifference)}{" "}
-                      <FaArrowUp size={16} />
-                    </>
-                  ) : (
-                    <></>
-                  )}
-                </Typography.Text>
-              </div>
             </div>
           </Card>
         </Col>
@@ -140,7 +123,7 @@ const DashBoard = () => {
           <Card
             loading={loading}
             className="ant-card-pro h-full"
-            title=<>
+            title={
               <div className="flex justify-between items-center">
                 <Typography.Title level={4} className="!mb-0">
                   Truy Cập Website
@@ -152,7 +135,7 @@ const DashBoard = () => {
                   icon={<FaEye />}
                 ></Avatar>
               </div>
-            </>
+            }
             bordered={false}
           >
             <Typography.Title className="fw-bold" level={2}>
@@ -164,18 +147,8 @@ const DashBoard = () => {
             </Typography.Title>
             <div className="flex justify-between">
               <Typography.Title level={4} type="danger" className="!my-2">
-                {" "}
-                ---{" "}
+                ---
               </Typography.Title>
-              <div className="flex items-center gap-2">
-                <Typography.Text
-                  className="flex items-center gap-2 !mt-0"
-                  type="success"
-                >
-                  ---
-                  <FaArrowUp size={16} />
-                </Typography.Text>
-              </div>
             </div>
           </Card>
         </Col>
@@ -213,12 +186,12 @@ const DashBoard = () => {
           </Card>
         </Col>
 
-        <Col span={24} className="mb-6 max-lg:mb-0" lg={{ span: 12 }}>
+        <Col span={24} className="mb-6 max-lg:mb-0">
           <Card
             loading={loading}
             title={
               <Typography.Title level={4} className="!mb-0">
-                Hôm Nay
+                Doanh thu - Đơn hàng hôm nay
               </Typography.Title>
             }
             bordered={false}
@@ -240,27 +213,6 @@ const DashBoard = () => {
                   },
                 ]}
               />
-            </div>
-          </Card>
-        </Col>
-
-        <Col span={24} className="mb-6" lg={{ span: 12 }}>
-          <Card
-            loading={loading}
-            title={
-              <Typography.Title level={4} className="!mb-0">
-                Doanh Thu Theo Tuần
-              </Typography.Title>
-            }
-            bordered={false}
-          >
-            <div style={{ height: 500 }}>
-              {/* <RevenueWeek
-                data={dailyRevenues.map((dailyRevenue, index) => ({
-                  value: dailyRevenue.revenue,
-                  name: dayNames[index],
-                }))}
-              /> */}
             </div>
           </Card>
         </Col>

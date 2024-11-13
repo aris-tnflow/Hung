@@ -9,6 +9,9 @@ Router.route("/")
     .get(groupPageController.allGroup)
     .post(rateLimiter.Admin, protectedRoute.isAdmin, groupPageController.addGroup);
 
+Router.route("/check/:slug")
+    .get(groupPageController.checkGroup);
+
 Router.route("/:id")
     .delete(rateLimiter.Admin, protectedRoute.isAdmin, groupPageController.delGroup)
     .put(rateLimiter.Admin, protectedRoute.isAdmin, groupPageController.putGroup);

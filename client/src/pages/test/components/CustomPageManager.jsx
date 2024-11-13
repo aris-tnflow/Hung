@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { cx } from './common';
-import { Button, Popconfirm, Tree, Typography } from 'antd';
+import { useState } from "react";
+import { cx } from "./common";
+import { Button, Popconfirm, Tree, Typography } from "antd";
 import { FaTrash } from "react-icons/fa";
 
 export default function CustomPageManager({
@@ -10,54 +10,50 @@ export default function CustomPageManager({
   select,
   remove,
 }) {
-
-  console.log(pages);
-
-
   const treeData = [
     {
-      title: 'parent 1',
-      key: '0-0',
+      title: "parent 1",
+      key: "0-0",
       children: [
         {
-          title: 'parent 1-0',
-          key: '0-0-0',
+          title: "parent 1-0",
+          key: "0-0-0",
           children: [
             {
-              title: 'leaf',
-              key: '0-0-0-0',
+              title: "leaf",
+              key: "0-0-0-0",
             },
             {
-              title: 'leaf',
-              key: '0-0-0-1',
+              title: "leaf",
+              key: "0-0-0-1",
             },
             {
-              title: 'leaf',
-              key: '0-0-0-2',
+              title: "leaf",
+              key: "0-0-0-2",
             },
           ],
         },
         {
-          title: 'parent 1-1',
-          key: '0-0-1',
+          title: "parent 1-1",
+          key: "0-0-1",
           children: [
             {
-              title: 'leaf',
-              key: '0-0-1-0',
+              title: "leaf",
+              key: "0-0-1-0",
             },
           ],
         },
         {
-          title: 'parent 1-2',
-          key: '0-0-2',
+          title: "parent 1-2",
+          key: "0-0-2",
           children: [
             {
-              title: 'leaf',
-              key: '0-0-2-0',
+              title: "leaf",
+              key: "0-0-2-0",
             },
             {
-              title: 'leaf',
-              key: '0-0-2-1',
+              title: "leaf",
+              key: "0-0-2-1",
             },
           ],
         },
@@ -76,14 +72,12 @@ export default function CustomPageManager({
   return (
     <div className="gjs-custom-page-manager">
       <div className="p-2">
-        <Button className='w-full mb-2' onClick={addNewPage}>Thêm trang mới</Button>
+        <Button className="w-full mb-2" onClick={addNewPage}>
+          Thêm trang mới
+        </Button>
 
-        <Tree
-          showLine
-          treeData={treeData}
-        />
+        <Tree showLine treeData={treeData} />
       </div>
-
 
       {/* {pages.map((page, index) => (
         <div

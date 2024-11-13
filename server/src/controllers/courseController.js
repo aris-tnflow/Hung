@@ -16,45 +16,58 @@ const sigCourser = async (req, res, next) => {
     try {
         const { slug } = req.params;
 
-        const results = await getSigData(nameMess, { slug: slug }, coursesSchema, {
-            populate: {
-                path: 'category includes',
-                select: '-module'
-            },
-            select: {
-                name: 1,
-                slug: 1,
-                category: 1,
-                price: 1,
-                sale: 1,
-                status: 1,
-                title: 1,
-                description: 1,
-                order: 1,
-                img: 1,
-                imgDetail: 1,
-                benefit: 1,
-                customer: 1,
-                output: 1,
-                prerequisite: 1,
-                hidden: 1,
-                includes: 1,
-                star: 1,
-                module: {
+        const results = await getSigData(
+            nameMess,
+            { slug: slug },
+            coursesSchema,
+            {
+                populate: {
+                    path: 'category includes',
+                    select: '-module' // Giữ select này nếu cần thiết
+                },
+                select: {
+                    name: 1,
+                    slug: 1,
+                    category: 1,
+                    price: 1,
+                    sale: 1,
+                    status: 1,
                     title: 1,
-                    key: 1,
-                    children: {
-                        title: 1,
-                    }
+                    description: 1,
+                    order: 1,
+                    img: 1,
+                    imgDetail: 1,
+                    benefit: 1,
+                    customer: 1,
+                    output: 1,
+                    prerequisite: 1,
+                    hidden: 1,
+                    includes: 1,
+                    star: 1,
+                    'module.title': 1,
+                    'module.key': 1,
+                    'module.children.title': 1,
+                    'module.children.public': 1,
+                    'module.children.src': 1
                 }
             }
-        });
+        );
+
+        if (results?.message?.module) {
+            results.message.module = results.message.module.map((mod) => ({
+                ...mod,
+                children: mod.children?.map((child) =>
+                    child.public ? child : { ...child, src: undefined }
+                )
+            }));
+        }
 
         res.status(results.status).json(results.message);
     } catch (error) {
         next(error);
     }
 };
+
 
 const sigAdmin = async (req, res, next) => {
     try {
@@ -185,7 +198,6 @@ const allCourserCart = async (req, res, next) => {
         next(error);
     }
 }
-
 
 const searchCourses = async (req, res, next) => {
     try {

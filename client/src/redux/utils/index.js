@@ -134,14 +134,14 @@ export const genericThunk = (key, api) => createAsyncThunk(key, async (body, thu
 export const genericDispatch = (dispatch, apiCall, onSuccess, onError) => {
     const now = new Date();
     const time = `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
-    toastLoading(time, 'Đang cập nhật...');
+    toastLoading(time, 'Đang Cập Nhật...');
     return dispatch(apiCall)
         .then((result) => {
             if (result.error) {
-                toastError(time, 'Cập nhật thất bại!', result.payload);
+                toastError(time, 'Cập Nhật Thất Bại!', result.payload);
                 if (onError) onError(result);
             } else {
-                toastSuccess(time, 'Cập nhật thành công!', result.payload.message);
+                toastSuccess(time, 'Cập Nhật Thành Công!', 'Dữ liệu đã được cập nhật');
                 if (onSuccess) onSuccess(result);
             }
             return result;

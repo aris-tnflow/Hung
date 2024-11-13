@@ -1,20 +1,16 @@
-import { Card, Col, Empty, Progress, Row, Tag, Typography } from "antd";
+import { Card, Col, Empty, Row, Typography } from "antd";
 import LayoutAdmin from "~/components/layout/Admin/Layout";
-import EChartsLineChart from "~/components/charts/Line";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { userApi } from "~/apis/userApi";
 import { baseURL } from "~/utils";
 import { FormatDayTime } from "~/components/table/Format";
 import { useNavigate } from "react-router-dom";
-import { getCourseUserApi } from "~/redux/slices/User/courseSlice";
 
 const Home = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.auth);
-  const { courseUser } = useSelector((state) => state.courseUser);
   const [data, setData] = useState([]);
   const collapsed = useSelector((state) => state.collapsed.collapsedMode);
 
@@ -166,11 +162,6 @@ const Home = () => {
   }
 
   useEffect(() => {
-    if (user?.courses) {
-      dispatch(getCourseUserApi({ ids: user.courses }));
-    }
-  }, [user]);
-  useEffect(() => {
     if (user?._id) {
       userApi.getSig(user?._id).then((res) => {
         const sortedVideos = res.video.sort(
@@ -264,8 +255,6 @@ const Home = () => {
                       />
                       <div
                         onClick={() => {
-                          console.log(video);
-
                           navigate(
                             `/user/course/${createSlug(video?.name)}?videoId=${
                               video?.videoId

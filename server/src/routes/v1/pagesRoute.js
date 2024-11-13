@@ -18,6 +18,9 @@ Router.route("/")
     .get(rateLimiter.Admin, protectedRoute.isAdmin, pagesController.allPage)
     .post(rateLimiter.Admin, protectedRoute.isAdmin, pagesController.addPage)
 
+Router.route("/group-page/:group")
+    .get(pagesController.allGroupPage)
+
 Router.route("/order")
     .put(rateLimiter.Admin, protectedRoute.isAdmin, pagesController.putOrder)
 

@@ -125,7 +125,7 @@ const put = async (req, res, next) => {
                 if (err) {
                     return res.status(500).json({ error: 'Không thể ghi file' });
                 }
-                res.json({ message: 'Cập nhật thành công', settings });
+                res.json({ message: 'Cập Nhật Thành Công', settings });
             });
         });
     } catch (error) {

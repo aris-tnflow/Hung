@@ -31,7 +31,7 @@ import { fileApi } from "~/apis/fileApi";
 import { baseURL } from "~/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { getPluginsScriptApi } from "~/redux/slices/Data/pluginsScriptSlice";
-import { Button } from "antd";
+import { Button, Typography } from "antd";
 
 import { TbArrowBack } from "react-icons/tb";
 import { getPluginsApi } from "~/redux/slices/Data/pluginsSlice";
@@ -143,13 +143,13 @@ const Pages = () => {
 
   const putPages = async (pageEdit, pageView) => {
     const date = Date.now();
-    toastLoading(date, "Đang cập nhật trang...");
+    toastLoading(date, "Đang Cập Nhật...");
 
     const { html, css, js } = pageView;
     const body = new DOMParser().parseFromString(html, "text/html");
 
     if (!body.body.innerHTML.trim()) {
-      toastError(date, "Trang không được để trống!");
+      toastError(date, "Trang Không Được Để Trống!");
       return;
     }
 
@@ -186,7 +186,7 @@ const Pages = () => {
               item.width
             }" style="aspect-ratio: ${item.aspectRatio};">
                     <a class="w-full h-full" href="${item.link || "#"}">
-                        <img class="w-full h-full" src="${
+                        <img loading="lazy" class="w-full h-full" src="${
                           item.imgSrc
                         }" alt="Học 3d cùng chicken war studio" title="Học 3d cùng chicken war studio"/>
                     </a>
@@ -200,9 +200,21 @@ const Pages = () => {
       const content = { html: doc.body.innerHTML, css, js };
       const edit = pageEdit;
       await pagesApi.put({ id: page._id, content: content, edit: edit });
-      toastSuccess(date, "Đã cập nhật trang");
+      toastSuccess(
+        date,
+        "Đã Cập Nhật Trang!",
+        <>
+          Vui lòng truy cập trang:{" "}
+          <span>
+            <Typography.Link href={`/${page.slug}`} target="_blank">
+              /{page.slug}
+            </Typography.Link>
+          </span>{" "}
+          và disable cache để xem trang đã cập nhật.
+        </>
+      );
     } catch (error) {
-      toastError(date, "Cập nhật trang thất bại");
+      toastError(date, "Cập Nhật Trang Thất Bại", "Vui lòng thử lại sau.");
     }
   };
 

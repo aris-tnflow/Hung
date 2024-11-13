@@ -112,7 +112,7 @@ const CardCourse = ({
                             }, 0);
                             toastSuccess(
                               info.name,
-                              "Thêm vào giỏ hàng thành công",
+                              "Thêm Vào Giỏ Hàng Thành Công!",
                               `Đã thêm ${info.name} vào giỏ hàng`
                             );
                           }}

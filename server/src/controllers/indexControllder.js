@@ -55,7 +55,7 @@ export const updateData = async (nameMess, schema, id, data, options = {}, check
             updateData.slug = slugify(name, slugifyOptions);
         }
 
-        const newData = await schema.findByIdAndUpdate(id, updateData, { new: true });
+        const newData = await schema.findOneAndUpdate({ _id: id }, updateData, { new: true });
         return {
             status: StatusCodes.OK,
             message: `Cập nhập ${nameMess} thành công!`,

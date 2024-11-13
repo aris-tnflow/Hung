@@ -12,4 +12,4 @@ const groupPageSchema = new mongoose.Schema({
 }, { timestamps: true }
 );
 
-export default mongoose.model('GroupPage', groupPageSchema);
+export default mongoose.model('group', groupPageSchema);

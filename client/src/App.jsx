@@ -27,7 +27,6 @@ import LogoutPage from "~/routes/LogoutRoute";
 
 // Public
 const HomePage = lazy(() => import("~/pages/public/Pages/Pages"));
-const Blog = lazy(() => import("Public/Blog/Blog"));
 const Login = lazy(() => import("Public/Login/Login"));
 const Cart = lazy(() => import("Public/Cart/Cart"));
 const CoursesPublic = lazy(() => import("Public/Courses/Courses"));
@@ -49,7 +48,6 @@ const KeyBank = lazy(() => import("Admin/KeyBank/KeyBank"));
 const Layout = lazy(() => import("Admin/Layout/Layout"));
 const Pages = lazy(() => import("Admin/Pages/Pages"));
 const Page = lazy(() => import("Admin/Page/Page"));
-const Menu = lazy(() => import("Admin/Menu/Menu"));
 const Emails = lazy(() => import("Admin/Emails/Emails"));
 const Email = lazy(() => import("Admin/Email/Email"));
 const Plugins = lazy(() => import("Admin/Plugins/Plugins"));
@@ -58,6 +56,7 @@ const Setting = lazy(() => import("Admin/Setting/Setting"));
 const Contacts = lazy(() => import("Admin/Contacts/Contacts"));
 const PagePublic = lazy(() => import("Admin/PageCourse/PageCourse"));
 const Notification = lazy(() => import("Admin/Notification/Notification"));
+const TestAD = lazy(() => import("Admin/Test/Test"));
 
 // Custom
 const Masonry = lazy(() =>
@@ -172,7 +171,6 @@ function App() {
             {/* Publish */}
             <Route path="/" element={<PublicRoute />}>
               <Route path="" element={<HomePage />} />
-              <Route path="blogs" element={<Blog />} />
               <Route path="*" element={<HomePage />} />
               <Route path="login" element={<Login />} />
               <Route path="cart" element={<Cart />} />
@@ -200,7 +198,7 @@ function App() {
               }
             >
               <Route path="" element={<Dashboard />} />
-              <Route path="menu" element={<Menu />} />
+              <Route path="test" element={<TestAD />} />
               <Route path="emails" element={<Emails />} />
               <Route path="email/:id" element={<Email />} />
               <Route path="info" element={<Info />} />
@@ -236,7 +234,7 @@ function App() {
               <Route path="" element={<CoursesUser />} />
               <Route path="course/:slug" element={<CourseUser />} />
               <Route path="orders" element={<OrdersUser />} />
-              <Route path="notify" element={<Notify />} />
+              <Route path="notification" element={<Notify />} />
               <Route path="change-password" element={<ChangePassword />} />
               <Route path="forgot-password" element={<ForgotPassword />} />
             </Route>

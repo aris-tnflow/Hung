@@ -55,6 +55,8 @@ const Pages = () => {
 
   const [openAddPage, setOpenAddPage] = useState(false);
   const [openAddCategory, setOpenAddCategory] = useState(false);
+  const [search, setSearch] = useState({});
+  const [isSearch, setIsSearch] = useState(false);
 
   const [drag, setDrag] = useState(
     localStorage.getItem("drag") === "true" ? true : false
@@ -93,6 +95,8 @@ const Pages = () => {
         })
       );
       setCurrent(1);
+      setIsSearch(true);
+      setSearch({ [searchedColumn]: searchText });
     } else {
       genericDispatch(
         dispatch,
@@ -108,7 +112,7 @@ const Pages = () => {
     {
       title: "Tên trang",
       dataIndex: "name",
-      width: "15%",
+      width: "12%",
       editable: true,
       ...FilterText({
         dataIndex: "name",
@@ -116,36 +120,37 @@ const Pages = () => {
       }),
     },
     {
-      title: "Link Trang",
+      title: "Đường dẫn trang",
       dataIndex: "slug",
-      width: "15%",
+      width: "12%",
       editable: false,
-      // ellipsis: {
-      //     showTitle: true,
-      // },
       ...FilterText({
         dataIndex: "slug",
         handleTableChange: handleSearchPage,
       }),
-      render: (slug) => (
-        <>
-          <Typography.Paragraph
-            className="!mb-0"
-            ellipsis={{ suffix: "" }}
-            copyable={{
-              text: `/${slug}`,
-            }}
-          >
-            {slug}
-          </Typography.Paragraph>
-        </>
-      ),
+      render: (slug, data) => {
+        const groupSlug = findGroupSlug(groupPages, data);
+
+        return (
+          <>
+            <Typography.Text
+              className="!mb-0"
+              copyable={{
+                text: groupSlug ? `/${groupSlug}/${slug}` : `/${slug}`,
+              }}
+            >
+              {groupSlug ? `/${groupSlug}/${slug}` : `/${slug}`}
+            </Typography.Text>
+          </>
+        );
+      },
     },
     {
       title: "Tiêu đề trang",
       dataIndex: "title",
-      width: "15%",
+      width: "12%",
       editable: true,
+      ellipsis: true,
       ...FilterText({
         dataIndex: "title",
         handleTableChange: handleSearchPage,
@@ -154,7 +159,7 @@ const Pages = () => {
     {
       title: "Mô tả",
       dataIndex: "description",
-      width: "15%",
+      width: "12%",
       editable: true,
       ...FilterText({
         dataIndex: "description",
@@ -164,7 +169,7 @@ const Pages = () => {
     {
       title: "Từ khóa",
       dataIndex: "keywords",
-      width: "15%",
+      width: "12%",
       type: "tag",
       editable: true,
       render: (keywords) => <FormatTag keywords={keywords} />,
@@ -172,13 +177,26 @@ const Pages = () => {
     {
       title: "Nhóm",
       dataIndex: "group",
-      width: "8%",
+      width: "12%",
       type: "select",
       editable: true,
-      optionSelect:
-        Array.isArray(groupPages) && groupPages?.length > 0
-          ? groupPages?.map((item) => ({ label: item.group, value: item._id }))
-          : [],
+      optionSelect: [
+        { label: "Không có", value: null },
+        ...(Array.isArray(groupPages) && groupPages.length > 0
+          ? groupPages.map((item) => ({ label: item.group, value: item._id }))
+          : []),
+      ],
+      ...(Array.isArray(groupPages) && groupPages?.length > 0
+        ? FilterSelect({
+            dataIndex: "group",
+            handleTableChange: handleSearchPage,
+            options: groupPages?.map((item) => ({
+              label: item.group,
+              value: item._id,
+            })),
+          })
+        : {}),
+
       render: (group) =>
         group &&
         groupPages &&
@@ -186,12 +204,6 @@ const Pages = () => {
         groupPages?.length > 0
           ? FindNameById(group, groupPages, "group")
           : null,
-      ...(Array.isArray(groupPages) && groupPages?.length > 0
-        ? FilterSelect(
-            "group",
-            groupPages?.map((item) => ({ text: item.group, value: item._id }))
-          )
-        : {}),
     },
   ];
 
@@ -203,7 +215,27 @@ const Pages = () => {
       type: "text",
       editable: true,
     },
+    {
+      title: "Link trang",
+      dataIndex: "slug",
+      width: "60%",
+      type: "text",
+      render: (slug) => (
+        <Typography.Text
+          className="!mb-0"
+          copyable={{
+            text: `/${slug}`,
+          }}
+        >
+          /{slug}
+        </Typography.Text>
+      ),
+    },
   ];
+
+  const findGroupSlug = (dataGroup, data) => {
+    return dataGroup.find((group) => group._id === data.group)?.slug;
+  };
 
   // Pages
   const handleAddPage = (data) => {
@@ -257,6 +289,35 @@ const Pages = () => {
       header={"BÀI VIẾT"}
       button={
         <>
+          {isSearch && (
+            <>
+              <Typography.Text className="mb-0">Đang lọc theo</Typography.Text>
+              {Object.entries(search).map(([key, value]) => (
+                <Typography.Text type="danger" className="!mb-0" key={key}>
+                  {key}: {value}
+                </Typography.Text>
+              ))}
+              <Button
+                onClick={() => {
+                  setIsSearch(false);
+                  genericDispatch(
+                    dispatch,
+                    getPageApi({
+                      page: 1,
+                      limit: localStorage.getItem("pageSize") || 10,
+                    })
+                  );
+                  setCurrent(1);
+                  localStorage.setItem(
+                    location?.pathname?.split("/")?.pop(),
+                    1
+                  );
+                }}
+              >
+                Bỏ lọc
+              </Button>
+            </>
+          )}
           {drag ? (
             <Button
               onClick={() => {
@@ -290,6 +351,9 @@ const Pages = () => {
       <Table
         dragMode={drag}
         Api={getPageApi}
+        ApiSearch={searchPageApi}
+        isSearch={isSearch}
+        search={search}
         current={current}
         setCurrent={setCurrent}
         ApiPut={putOrderApi}
@@ -299,53 +363,62 @@ const Pages = () => {
         columns={columns}
         onSave={handlePutPage}
         onDelete={handleDelPage}
-        width={"12%"}
-        button={(record) => (
-          <>
-            <Tooltip title="Xem trang">
-              <NavLink
-                to={record.slug === "trang-chu" ? "/" : `/${record.slug}`}
-                target="_blank"
-              >
-                <FaEye size={22} color="#006aff" />
-              </NavLink>
-            </Tooltip>
-
-            <Tooltip title="Sao chép trang">
-              <Typography
-                onClick={() =>
-                  genericDispatch(dispatch, copyPageApi(record._id))
-                }
-              >
-                <FaCopy size={22} color="#55ff00" />
-              </Typography>
-            </Tooltip>
-
-            {isMobile ? (
-              <>
-                <Tooltip title="Chỉnh sửa trang">
-                  <Typography.Link
-                    onClick={() =>
-                      toastError(
-                        "",
-                        "Bạn không thể truy cập trang này!",
-                        "Vui lòng sử dụng máy tính để trãi nghiệm tốt nhất!"
-                      )
-                    }
-                  >
-                    <FaFilePen size={22} color="rgb(255 127 0)" />
-                  </Typography.Link>
-                </Tooltip>
-              </>
-            ) : (
-              <Tooltip title="Chỉnh sửa trang">
-                <a href={`/admin/page/${record.slug}`}>
-                  <FaFilePen size={22} color="rgb(255 127 0)" />
-                </a>
+        width={"10%"}
+        button={(record) => {
+          const groupSlug = findGroupSlug(groupPages, record);
+          return (
+            <>
+              <Tooltip title="Xem trang">
+                <NavLink
+                  to={
+                    record.slug === "trang-chu"
+                      ? "/"
+                      : groupSlug
+                      ? `/${groupSlug}/${record.slug}`
+                      : `/${record.slug}`
+                  }
+                  target="_blank"
+                >
+                  <FaEye size={22} color="#006aff" />
+                </NavLink>
               </Tooltip>
-            )}
-          </>
-        )}
+
+              <Tooltip title="Sao chép trang">
+                <Typography
+                  onClick={() =>
+                    genericDispatch(dispatch, copyPageApi(record._id))
+                  }
+                >
+                  <FaCopy size={22} color="#55ff00" />
+                </Typography>
+              </Tooltip>
+
+              {isMobile ? (
+                <>
+                  <Tooltip title="Chỉnh sửa trang">
+                    <Typography.Link
+                      onClick={() =>
+                        toastError(
+                          "",
+                          "Bạn không thể truy cập trang này!",
+                          "Vui lòng sử dụng máy tính để trãi nghiệm tốt nhất!"
+                        )
+                      }
+                    >
+                      <FaFilePen size={22} color="rgb(255 127 0)" />
+                    </Typography.Link>
+                  </Tooltip>
+                </>
+              ) : (
+                <Tooltip title="Chỉnh sửa trang">
+                  <a href={`/admin/page/${record.slug}`}>
+                    <FaFilePen size={22} color="rgb(255 127 0)" />
+                  </a>
+                </Tooltip>
+              )}
+            </>
+          );
+        }}
       />
 
       {/* Pages */}
@@ -373,13 +446,14 @@ const Pages = () => {
             <Input className="mb-2" placeholder="Nhập tên trang" />
           </Form.Item>
 
-          <Form.Item
-            label="Nhóm"
-            className="mb-2"
-            name="name"
-            rules={[{ required: true, message: "Vui lòng nhập tên trang!" }]}
-          >
-            <Select placeholder="Chọn nhóm" />
+          <Form.Item label="Nhóm" className="mb-2" name="group">
+            <Select
+              placeholder="Chọn nhóm"
+              options={groupPages?.map((item) => ({
+                label: item.group,
+                value: item._id,
+              }))}
+            />
           </Form.Item>
         </Form>
       </Modal>

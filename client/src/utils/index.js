@@ -11,7 +11,7 @@ export const TYPE_EMPLOYEE = {
 };
 
 export const baseURL = process.env.BUILD_MODE === 'dev'
-    ? "https://api.tnflow.site" //https://api.tnflow.site  http://localhost:8082
+    ? "http://localhost:8082" //https://api.tnflow.site  http://localhost:8082
     : process.env.BUILD_MODE === 'production'
         ? import.meta.env.VITE_API_URL : '';
 

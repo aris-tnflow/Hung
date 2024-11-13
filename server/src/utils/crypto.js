@@ -9,7 +9,6 @@ export const encrypt = (data) => {
         const encrypted = CryptoJS.AES.encrypt(dataString, secretkey);
         return encrypted.toString();
     } catch (error) {
-        console.error('Encryption error:', error);
         return null;
     }
 };
@@ -24,7 +23,6 @@ export const decrypt = (encryptedString) => {
             return decryptedString;
         }
     } catch (error) {
-        console.error('Decryption error:', error);
         return null;
     }
 };

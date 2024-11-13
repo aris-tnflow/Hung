@@ -43,9 +43,20 @@ const delGroup = async (req, res, next) => {
     }
 }
 
+const checkGroup = async (req, res, next) => {
+    try {
+        const { slug } = req.params;
+        const exists = await groupPageSchema.findOne({ slug });
+        return res.status(200).json(!!exists);
+    } catch (error) {
+        next(error);
+    }
+}
+
 export const groupPageController = {
     addGroup,
     allGroup,
     putGroup,
     delGroup,
+    checkGroup,
 }

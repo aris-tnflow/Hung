@@ -59,7 +59,7 @@ import {
 import { IoMdMail } from "react-icons/io";
 import { BsPlugin } from "react-icons/bs";
 
-import { baseURL, TYPE_EMPLOYEE } from "~/utils";
+import { TYPE_EMPLOYEE } from "~/utils";
 
 import "./Layout.css";
 import "animate.css";
@@ -147,7 +147,7 @@ const LayoutAdmin = ({
           label: "Website",
           children: [
             {
-              key: "website",
+              key: "website1",
               icon: <FaInfoCircle size={18} />,
               label: "Thông tin",
               link: "/admin/info",
@@ -353,7 +353,7 @@ const LayoutAdmin = ({
           key: "notify",
           icon: <IoNotificationsSharp size={18} />,
           label: "Thông báo",
-          link: "/user/notify",
+          link: "/user/notification",
         });
         menuItems.push({
           key: "change-password",
@@ -504,6 +504,7 @@ const LayoutAdmin = ({
     setDataNotify(filteredData);
   }, [notification, colorPrimary, user, dispatch]);
 
+  //Fetch
   useEffect(() => {
     if (!loadingUser) {
       if (loadingCart) {
@@ -534,19 +535,28 @@ const LayoutAdmin = ({
       <Helmet prioritizeSeoTags>
         <meta
           name="description"
-          content={description || info[0]?.description}
+          content={description || info?.newData?.[0]?.description}
         />
-        <meta name="keywords" content={keywords || info[0]?.keywords} />
-        <meta name="author" content={author || info[0]?.manage} />
-        <title>{title || info[0]?.name}</title>
+        <meta
+          name="keywords"
+          content={keywords || info?.newData?.[0]?.keywords}
+        />
+        <meta name="author" content={author || info?.newData?.[0]?.manage} />
+        <title>{title || info?.newData?.[0]?.name}</title>
       </Helmet>
 
       <Layout>
         {isMobile ? (
           <Drawer
             width={240}
+            height={"100%"}
             className="menu-admin"
-            title={info[0]?.name}
+            title={
+              <Typography.Link className="text-lg flex justify-center uppercase">
+                {info?.newData?.[0]?.name}
+              </Typography.Link>
+            }
+            closeIcon={null}
             placement="left"
             onClose={() => setOpen(false)}
             open={open}
@@ -554,7 +564,7 @@ const LayoutAdmin = ({
             <Menu
               className="overflow-y-auto"
               mode="inline"
-              style={{ height: "calc(100vh - 112px)" }}
+              style={{ height: "calc(100dvh - 112px)" }}
               selectedKeys={selectedMenu()}
               onClick={onClickMenu}
               items={menuSidebars}
@@ -562,6 +572,7 @@ const LayoutAdmin = ({
 
             <Button
               type="link"
+              className="h-[112px]"
               icon={
                 !open ? (
                   <TbPlayerTrackNextFilled size={22} />

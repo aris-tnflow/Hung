@@ -74,7 +74,7 @@ const Pages = () => {
       Footer = `<div id="Footer">${footerElement.innerHTML}</div>`;
     }
 
-    toastLoading(date, "Đang cập nhật...");
+    toastLoading(date, "Đang Cập Nhật...");
     layoutApi
       .putLayout(id_layout, {
         header: Header,
@@ -84,7 +84,7 @@ const Pages = () => {
         edit: pageEdit,
       })
       .then(() => {
-        toastSuccess(date, "Cập nhật thành công");
+        toastSuccess(date, "Cập Nhật Thành Công");
       })
       .catch((err) => {
         toastError(err.response.data.message);

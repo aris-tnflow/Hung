@@ -18,6 +18,7 @@ const Admin = createRateLimiter(1, 50);
 const Bank = createRateLimiter(1, 10);
 const Auth = createRateLimiter(5, 10);
 const One = createRateLimiter(1, 60);
+const Private = createRateLimiter(120, 1);
 
 export const rateLimiter = {
     All,
@@ -26,5 +27,6 @@ export const rateLimiter = {
     File,
     Bank,
     Auth,
-    One
+    One,
+    Private
 }
